@@ -152,24 +152,18 @@ except Exception as e:
 ### Storing WDI Country
 
 ```{python}
-
-df_country.to_sql("wdi_country", cnx, if_exists="replace", index=False)
-
+    df_country.to_sql("wdi_country", cnx, if_exists="fail", index=False)
 ```
 
 ### Storing WDI Series
 ```{python}
-
-df_series.to_sql("wdi_series", cnx, if_exists="replace", index=False)
-
+    df_country.to_sql("wdi_series", cnx, if_exists="fail", index=False)
 ```
 
 ### Storing WDI Data
 
 ```{python}
-
-df_data.to_sql("wdi_data", cnx, if_exists="replace", index=False)
-
+    df_country.to_sql("wdi_data", cnx, if_exists="fail", index=False)
 ```
 
 ## Grant permissions for other to access
