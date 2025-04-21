@@ -122,7 +122,14 @@ SELECT *
 FROM world_bank_data.wdi_country
 WHERE `Region` IS NOT NULL;
 """)
+
+run_sql_and_return_html(cnx,"""
+select count(*) as NumCountries
+from wdi_country
+""")
 ```
+
+
 
 ## Task 5
 
@@ -250,7 +257,7 @@ order by countryCount desc
 ## in the first column.
 
 run_sql_and_return_html(cnx,"""
-select `Short Name`, `Income Group`
+select `Short Name`, `Income Group`, `Region`
 from wdi_country
 where `Income Group` is NULL
 """)
@@ -282,7 +289,7 @@ with cnx.begin() as connection:
 ## Now, display the country again to verify the change stuck!
 
 run_sql_and_return_html(cnx,"""
-select `Short Name`, `Income Group`
+select `Short Name`, `Income Group`, `Region`
 from  wdi_country
 where `Short Name` = "Venezuela"
 """)
@@ -328,7 +335,7 @@ select
     sum(case when `Income Group` = 'Upper middle income' then 1 else 0 end) as Upper_Middle_Income,
     sum(case when `Income Group` = 'Lower middle income' then 1 else 0 end) as Lower_Middle_Income,
     sum(case when `Income Group` = 'Low income' then 1 else 0 end) as Low_Income,
-    count(*) as Total
+    cast(count(*) as decimal(10,1)) as Total
 from 
     wdi_country
 group by 
@@ -482,7 +489,10 @@ sum(case when `Income Group` = 'Upper middle income' then 1 else 0 end) / (selec
 
 sum(case when `Income Group` = 'Lower middle income' then 1 else 0 end) / (select count(*) from wdi_country) * 100 as Lower_Middle_Income,
 
-sum(case when `Income Group` = 'Low income' then 1 else 0 end) / (select count(*) from wdi_country) * 100 as Low_Income
+sum(case when `Income Group` = 'Low income' then 1 else 0 end) / (select count(*) from wdi_country) * 100 as Low_Income,
+
+
+sum(case when `Income Group` = NULL then 1 else 0 end) / (select count(*) from wdi_country) * 100 as No_Income
 
 from wdi_country
 group by `Region`
@@ -501,7 +511,10 @@ order by `Region`
 ## (This is much simpler than task 20!)
 
 run_sql_and_return_html(cnx,"""
-select ig.`Income Group`, ig.countriesInIncomeGroup, tc.totalCountries, ig.countriesInIncomeGroup / tc.totalCountries * 100 as percentTotal
+select ig.`Income Group`, 
+ig.countriesInIncomeGroup, 
+tc.totalCountries, 
+ROUND(ig.countriesInIncomeGroup / tc.totalCountries * 100, 1) as percentTotal
 from 
     (select distinct `Income Group` from wdi_country) as all_income_groups
 left join 
