@@ -25,7 +25,7 @@ Clone the repository by entering the following in the command line of your choic
 ```bash
 gh repo clone cmsc-vcu/cmsc408-sp2025-hw8-GrayJLG
 
-cd cmsc408-sp2025-hw6-GrayJLG
+cd cmsc408-sp2025-hw8-GrayJLG
 
 ```
 
