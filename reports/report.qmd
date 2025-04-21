@@ -418,7 +418,7 @@ order by `Short Name` asc
 ## (skills: select, where, subqueries, joins)
 
 run_sql_and_return_html(cnx,"""
-select re.`Region`, ig.`Income Group`
+select re.`Region`, ig.`Income Group`, count(wc.`Region`) as `Missing Combination Count`
 from
   (select distinct `Region` from wdi_country) as re
 cross join
@@ -428,6 +428,8 @@ left join
 on re.`Region` = wc.`Region` and ig.`Income Group` = wc.`Income Group`
 where
   wc.`Region` is null
+group by
+re.`Region`, ig.`Income Group`
 order by
 re.`Region`, ig.`Income Group`
 
